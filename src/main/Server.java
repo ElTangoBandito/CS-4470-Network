@@ -2,25 +2,28 @@ package main;
 import java.lang.*;
 import java.io.*;
 import java.net.*;
+import java.util.Date;
 
 public class Server {
+	
+	public static int PORT_NUMBER = 4470;
 
-	public static void main(String[] args) {
-		String data = "hello world";
-		try {
-			ServerSocket srvr = new ServerSocket(1234);
-			Socket skt = srvr.accept();
-			System.out.println("Server has connected");
-			PrintWriter out = new PrintWriter(skt.getOutputStream(), true);
-			out.print(data);
-			out.close();
-			skt.close();
-			srvr.close();
-		}
-		catch (Exception e) {
-			System.out.print("Error:" + e.toString());
-		}
-
-	}
-
+    public static void main(String[] args) throws IOException {
+        ServerSocket listener = new ServerSocket(PORT_NUMBER);
+        try {
+            while (true) {
+                Socket socket = listener.accept();
+                try {
+                    PrintWriter out =
+                        new PrintWriter(socket.getOutputStream(), true);
+                    out.println(new Date().toString());
+                } finally {
+                    socket.close();
+                }
+            }
+        }
+        finally {
+            listener.close();
+        }
+    }
 }
