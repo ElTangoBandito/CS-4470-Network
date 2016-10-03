@@ -24,9 +24,14 @@ public class Main {
 		pt2.start();
 		pt3.start();
 		*/
-		ServerSocket listener = new ServerSocket(PORTNUMBER);;
+		System.out.println(getMyIP());
+		ServerSocket listener = new ServerSocket(PORTNUMBER);
+		ProcessThread pt = new ProcessThread(listener);
+		pt.start();
+		/*
         try {
             while (true) {
+            	
                 Socket socket = listener.accept();
                 try {
                     PrintWriter out =
@@ -35,11 +40,11 @@ public class Main {
                     out.println("Connected on " + time.toString());
                     System.out.print("Connected to client");
                     peerList.add(new Peer(socket, PORTNUMBER));
-                    /*
+                    
                     while (true) {
                     	
                     }
-                    */
+                    
                     
                     listPeers();
                 } finally {
@@ -50,6 +55,7 @@ public class Main {
         finally {
             listener.close();
         }
+        */
 	}
 	
 	public static int getPort(){

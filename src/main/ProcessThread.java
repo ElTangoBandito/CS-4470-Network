@@ -2,13 +2,23 @@ package main;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ProcessThread extends Thread{
 	Socket connection;
+	List<Peer> peerList;
+	ServerSocket listener;
 	//int count;
-	ProcessThread(Socket connection){
-		this.connection = connection;
+	ProcessThread(ServerSocket listenerIn){
+		//this.connection = connection;
+		listener = listenerIn;
+		peerList = new ArrayList<Peer>();
+		
 	}
 	/*
 	ProcessThread(int i){
@@ -18,22 +28,23 @@ public class ProcessThread extends Thread{
 	public void run(){
 		try {
 			while(true){
-				DataInputStream packet = new DataInputStream(connection.getInputStream());
-				System.out.println(packet.readUTF());
+				connection = listener.accept();
+				PrintWriter out =
+                        new PrintWriter(connection.getOutputStream(), true);
+				Date time = new Date();
+                out.println("Connected on " + time.toString());
+                System.out.print("Connected to client");
+                peerList.add(new Peer(connection, listener.getLocalPort()));
+				//DataInputStream packet = new DataInputStream(connection.getInputStream());
+				//System.out.println(packet.readUTF());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		/*
-		for(int i = 0; i < count; i++){
-			System.out.println(i);
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		*/
+
+	}
+	
+	public List<Peer> getPeerList(){
+		return peerList;
 	}
 }
