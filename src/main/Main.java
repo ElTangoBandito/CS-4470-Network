@@ -8,6 +8,7 @@ import java.util.*;
 public class Main {
 	// TODO: Get port number from user input
 	private static int PORTNUMBER;
+	private static boolean terminated;
 	
 	// TODO: Using Map instead of List
 	private static List<Peer> peerList = new ArrayList<>();
@@ -28,6 +29,30 @@ public class Main {
 		ServerSocket listener = new ServerSocket(PORTNUMBER);
 		ProcessThread pt = new ProcessThread(listener);
 		pt.start();
+		
+		//UserThread userInputThread = new UserThread();
+		//userInputThread.start();
+		
+		System.out.println(getPort());
+		/*
+		terminated = false;
+		while(!terminated){
+			Scanner baseScanner = new Scanner(System.in);
+			if (baseScanner.hasNext()){
+				String userArgs = baseScanner.nextLine();
+				String[] userInput = userArgs.split("\\s+");
+				//String userInput[] = userInputThread.getUserInput();
+				if (userInput != null){
+					if (userInput.equals("help")){
+						showHelp();
+					}
+					else if(userInput.equals("myip")){
+						System.out.println(getMyIP());
+					}
+				}
+			}
+		}
+		*/
 		/*
         try {
             while (true) {
@@ -71,7 +96,6 @@ public class Main {
 						userPort = Integer.parseInt(userArgs[1]);
 						if (userPort >= 1000 && userPort <= 65536){
 							baseScanner.close();
-							System.out.println(userPort);
 							break;
 						}
 					}catch(Exception e){
@@ -90,7 +114,7 @@ public class Main {
 	// ==============  REQUIRMENT FUNCTIONS  ================
 	
 	// REQUIEMENT # 1: help
-	public void showHelp() {
+	public static void showHelp() {
 		// TODO: show help information
 	}
 	
