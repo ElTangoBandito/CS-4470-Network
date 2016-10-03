@@ -7,15 +7,23 @@ import java.util.*;
 
 public class Main {
 	// TODO: Get port number from user input
-	private static int PORTNUMBER = 4470;
+	private static int PORTNUMBER;
 	
 	// TODO: Using Map instead of List
 	private static List<Peer> peerList = new ArrayList<>();
 	
 	public static void main(String[] args) throws IOException{
 		// TODO: Process user input
-		
+		PORTNUMBER = getPort();
 		// TODO: Multithreading
+		/*
+		ProcessThread pt = new ProcessThread(21);
+		ProcessThread pt2 = new ProcessThread(22);
+		ProcessThread pt3 = new ProcessThread(22);
+		pt.start();
+		pt2.start();
+		pt3.start();
+		*/
 		ServerSocket listener = new ServerSocket(PORTNUMBER);;
         try {
             while (true) {
@@ -52,11 +60,12 @@ public class Main {
 			String[] userArgs = userInput.split("\\s+");
 			
 			if (userArgs.length == 2){
-				if (userArgs[0].equals("/chat")){
+				if (userArgs[0].equals("./chat")){
 					try{
 						userPort = Integer.parseInt(userArgs[1]);
 						if (userPort >= 1000 && userPort <= 65536){
 							baseScanner.close();
+							System.out.println(userPort);
 							break;
 						}
 					}catch(Exception e){
