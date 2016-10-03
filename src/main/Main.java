@@ -7,18 +7,79 @@ import java.util.*;
 
 public class Main {
 	// TODO: Get port number from user input
-	private static int PORTNUMBER = 4470;
+	private static int PORTNUMBER;
+	private static boolean terminated;
+	private static Scanner baseScanner;
 	
 	// TODO: Using Map instead of List
 	private static List<Peer> peerList = new ArrayList<>();
 	
 	public static void main(String[] args) throws IOException{
 		// TODO: Process user input
-		
+		PORTNUMBER = getPort();
 		// TODO: Multithreading
-		ServerSocket listener = new ServerSocket(PORTNUMBER);;
+		/*
+		ProcessThread pt = new ProcessThread(21);
+		ProcessThread pt2 = new ProcessThread(22);
+		ProcessThread pt3 = new ProcessThread(22);
+		pt.start();
+		pt2.start();
+		pt3.start();
+		*/
+		//System.out.println(getMyIP());
+		ServerSocket listener = new ServerSocket(PORTNUMBER);
+		ProcessThread pt = new ProcessThread(listener);
+		pt.start();
+		
+		//UserThread userInputThread = new UserThread();
+		//userInputThread.start();
+		
+		
+		terminated = false;
+		while(!terminated){
+			if (baseScanner.hasNext()){
+				String userArgs = baseScanner.nextLine();
+				String[] userInput = userArgs.split("\\s+");
+				//String userInput[] = userInputThread.getUserInput();
+				if (userInput != null){
+					if (userInput[0].equals("help")){
+						showHelp();
+					}
+					else if(userInput[0].equals("myip")){
+						System.out.println(getMyIP());
+					}
+					else if(userInput[0].equals("myport")){
+						System.out.println(getPort());
+					}
+					else if(userInput[0].equals("connect")){
+						//needs to do checking
+						connect(userInput[1], Integer.parseInt(userInput[2]));
+					}
+					else if(userInput[0].equals("list")){
+						listPeers();
+					}
+					else if(userInput[0].equals("terminate")){
+						//do checking
+						terminate(Integer.parseInt(userInput[1]));
+					}
+					else if(userInput[0].equals("send")){
+						//do checking
+						send(Integer.parseInt(userInput[1]), userInput[2]);
+					}
+					else if(userInput[0].equals("exit")){
+						exit();
+					}
+					else{
+						System.out.println("Invalid command or parameters, type in 'help' for details");
+					}
+				}
+			}
+		}
+		
+		/*
         try {
             while (true) {
+            	
                 Socket socket = listener.accept();
                 try {
                     PrintWriter out =
@@ -32,6 +93,7 @@ public class Main {
                     	
                     }
                     
+                    
                     listPeers();
                 } finally {
                     socket.close();
@@ -41,13 +103,42 @@ public class Main {
         finally {
             listener.close();
         }
+        */
 	}
 	
-	
+	public static int getPort(){
+		int userPort = 0;
+		baseScanner = new Scanner(System.in);
+		while(baseScanner.hasNextLine()){
+			String userInput = baseScanner.nextLine();
+			String[] userArgs = userInput.split("\\s+");
+			
+			if (userArgs.length == 2){
+				if (userArgs[0].equals("./chat")){
+					try{
+						userPort = Integer.parseInt(userArgs[1]);
+						if (userPort >= 1000 && userPort <= 65536){
+							//baseScanner.close();
+							break;
+						}
+					}catch(Exception e){
+						e.printStackTrace();
+						userPort = 0;
+					}
+				}
+			}
+			else{
+				continue;
+			}
+		}
+		return userPort;
+		
+	}
 	// ==============  REQUIRMENT FUNCTIONS  ================
 	
 	// REQUIEMENT # 1: help
-	public void showHelp() {
+	public static void showHelp() {
+		
 		// TODO: show help information
 	}
 	
@@ -64,12 +155,12 @@ public class Main {
 	}
 	
 	// REQUIEMENT # 3: myport
-	public int getMyPortNumber() {
+	public static int getMyPortNumber() {
 		return PORTNUMBER;
 	}
 	
 	// REQUIEMENT # 4: connect <destination> <port no>
-	public void connect(String destinationIP, int portNumber) {
+	public static void connect(String destinationIP, int portNumber) {
 		// TODO: Check if IP address is valid
 		try {
 			Socket peer = new Socket(destinationIP, portNumber);
@@ -90,7 +181,7 @@ public class Main {
 	}
 	
 	// REQUIEMENT # 6: terminate <connection id.>
-	public void terminate(int connectionID) {
+	public static void terminate(int connectionID) {
 		for ( Peer peer : peerList) {
 			if (peer.getId() == connectionID) {
 				peer.terminate();
@@ -100,7 +191,7 @@ public class Main {
 	}
 	
 	// REQUIEMENT # 7: send <connection id.> <message>
-	public void send(int connectionID, String message) {
+	public static void send(int connectionID, String message) {
 		for ( Peer peer : peerList) {
 			if (peer.getId() == connectionID) {
 				peer.sendMessage(message);
@@ -110,14 +201,12 @@ public class Main {
 	}
 	
 	// REQUIEMENT # 8: exit
-	public void exit() {
+	public static void exit() {
 		for ( Peer peer : peerList) {
 			peer.terminate();
 		}
 	}
 	
 	// ==============  HELPER FUNCTIONS  ==============
-	
-	
 	
 }
