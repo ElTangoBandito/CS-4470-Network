@@ -28,7 +28,7 @@ public class Main {
 		*/
 		//System.out.println(getMyIP());
 		ServerSocket listener = new ServerSocket(PORTNUMBER);
-		ProcessThread pt = new ProcessThread(listener);
+		ProcessThread pt = new ProcessThread(listener, peerList);
 		pt.start();
 		
 		//UserThread userInputThread = new UserThread();
@@ -56,6 +56,7 @@ public class Main {
 						connect(userInput[1], Integer.parseInt(userInput[2]));
 					}
 					else if(userInput[0].equals("list")){
+						//peerList.addAll(pt.getPeerList());
 						listPeers();
 					}
 					else if(userInput[0].equals("terminate")){
@@ -76,6 +77,7 @@ public class Main {
 			}
 		}
 		
+		System.out.println("Messenger shutting down...");
 		/*
         try {
             while (true) {
@@ -204,6 +206,7 @@ public class Main {
 	public static void exit() {
 		for ( Peer peer : peerList) {
 			peer.terminate();
+			terminated = true;
 		}
 	}
 	
