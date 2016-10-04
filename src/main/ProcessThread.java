@@ -14,10 +14,10 @@ public class ProcessThread extends Thread{
 	List<Peer> peerList;
 	ServerSocket listener;
 	//int count;
-	ProcessThread(ServerSocket listenerIn){
+	ProcessThread(ServerSocket listenerIn, List<Peer> peerListIn){
 		//this.connection = connection;
 		listener = listenerIn;
-		peerList = new ArrayList<Peer>();
+		peerList = peerListIn;
 		
 	}
 	/*
