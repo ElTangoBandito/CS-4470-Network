@@ -18,22 +18,9 @@ public class Main {
 		// TODO: Process user input
 		PORTNUMBER = getPort();
 		// TODO: Multithreading
-		/*
-		ProcessThread pt = new ProcessThread(21);
-		ProcessThread pt2 = new ProcessThread(22);
-		ProcessThread pt3 = new ProcessThread(22);
-		pt.start();
-		pt2.start();
-		pt3.start();
-		*/
-		//System.out.println(getMyIP());
 		ServerSocket listener = new ServerSocket(PORTNUMBER);
 		ProcessThread pt = new ProcessThread(listener, peerList);
 		pt.start();
-		
-		//UserThread userInputThread = new UserThread();
-		//userInputThread.start();
-		
 		
 		terminated = false;
 		while(!terminated){
@@ -83,34 +70,6 @@ public class Main {
 		}
 		
 		System.out.println("Messenger shutting down...");
-		/*
-        try {
-            while (true) {
-            	
-                Socket socket = listener.accept();
-                try {
-                    PrintWriter out =
-                        new PrintWriter(socket.getOutputStream(), true);
-                    Date time = new Date();
-                    out.println("Connected on " + time.toString());
-                    System.out.print("Connected to client");
-                    peerList.add(new Peer(socket, PORTNUMBER));
-                    
-                    while (true) {
-                    	
-                    }
-                    
-                    
-                    listPeers();
-                } finally {
-                    socket.close();
-                }
-            }
-        }
-        finally {
-            listener.close();
-        }
-        */
 	}
 	
 	public static int getPort(){
