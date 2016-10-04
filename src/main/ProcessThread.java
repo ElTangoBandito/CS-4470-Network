@@ -37,6 +37,9 @@ public class ProcessThread extends Thread{
                 peerList.add(new Peer(connection, listener.getLocalPort()));
 				//DataInputStream packet = new DataInputStream(connection.getInputStream());
 				//System.out.println(packet.readUTF());
+                for (Peer peer: peerList) {
+                	peer.printMessage();
+                }
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

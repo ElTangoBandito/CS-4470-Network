@@ -61,4 +61,17 @@ class Peer extends Object {
 		}
 	}
 	
+	public void printMessage() {
+        BufferedReader reader;
+		try {
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String message = reader.readLine();
+            System.out.println("From: " + id);
+            System.out.println(message);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }
