@@ -65,7 +65,12 @@ public class Main {
 					}
 					else if(userInput[0].equals("send")){
 						//do checking
-						send(Integer.parseInt(userInput[1]), userInput[2]);
+						String message = "";
+						for (int i = 2; i < userInput.length; i++){
+							message += userInput[i];
+							message += " ";
+						}
+						send(Integer.parseInt(userInput[1]), message);
 					}
 					else if(userInput[0].equals("exit")){
 						exit();
@@ -184,11 +189,15 @@ public class Main {
 	
 	// REQUIEMENT # 6: terminate <connection id.>
 	public static void terminate(int connectionID) {
+		Integer peerIndex = null;
 		for ( Peer peer : peerList) {
 			if (peer.getId() == connectionID) {
 				peer.terminate();
-				return;
+				peerIndex = peerList.indexOf(peer);
 			}
+		}
+		if (peerIndex != null){
+			peerList.remove(peerIndex);
 		}
 	}
 	
