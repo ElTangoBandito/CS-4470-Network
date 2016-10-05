@@ -148,15 +148,15 @@ public class Main {
 	
 	// REQUIEMENT # 6: terminate <connection id.>
 	public static void terminate(int connectionID) {
-		Integer peerIndex = null;
-		for ( Peer peer : peerList) {
-			if (peer.getId() == connectionID) {
-				peer.terminate();
-				peerIndex = peerList.indexOf(peer);
+		int remove = -1;
+		for (int i = 0; i < peerList.size(); i++) {
+			if (peerList.get(i).getId() == connectionID) {
+				peerList.get(i).terminate();
+				remove = i;
 			}
 		}
-		if (peerIndex != null){
-			peerList.remove(peerIndex);
+		if (remove != -1) {
+			peerList.remove(remove);
 		}
 	}
 	
