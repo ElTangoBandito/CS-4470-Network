@@ -18,22 +18,9 @@ public class Main {
 		// TODO: Process user input
 		PORTNUMBER = getPort();
 		// TODO: Multithreading
-		/*
-		ProcessThread pt = new ProcessThread(21);
-		ProcessThread pt2 = new ProcessThread(22);
-		ProcessThread pt3 = new ProcessThread(22);
-		pt.start();
-		pt2.start();
-		pt3.start();
-		*/
-		//System.out.println(getMyIP());
 		ServerSocket listener = new ServerSocket(PORTNUMBER);
 		ProcessThread pt = new ProcessThread(listener, peerList);
 		pt.start();
-		
-		//UserThread userInputThread = new UserThread();
-		//userInputThread.start();
-		
 		
 		terminated = false;
 		while(!terminated){
@@ -65,7 +52,12 @@ public class Main {
 					}
 					else if(userInput[0].equals("send")){
 						//do checking
-						send(Integer.parseInt(userInput[1]), userInput[2]);
+						String message = "";
+						for (int i = 2; i < userInput.length; i++){
+							message += userInput[i];
+							message += " ";
+						}
+						send(Integer.parseInt(userInput[1]), message);
 					}
 					else if(userInput[0].equals("exit")){
 						exit();
@@ -78,34 +70,6 @@ public class Main {
 		}
 		
 		System.out.println("Messenger shutting down...");
-		/*
-        try {
-            while (true) {
-            	
-                Socket socket = listener.accept();
-                try {
-                    PrintWriter out =
-                        new PrintWriter(socket.getOutputStream(), true);
-                    Date time = new Date();
-                    out.println("Connected on " + time.toString());
-                    System.out.print("Connected to client");
-                    peerList.add(new Peer(socket, PORTNUMBER));
-                    
-                    while (true) {
-                    	
-                    }
-                    
-                    
-                    listPeers();
-                } finally {
-                    socket.close();
-                }
-            }
-        }
-        finally {
-            listener.close();
-        }
-        */
 	}
 	
 	public static int getPort(){
@@ -134,7 +98,6 @@ public class Main {
 			}
 		}
 		return userPort;
-		
 	}
 	// ==============  REQUIRMENT FUNCTIONS  ================
 	
@@ -184,11 +147,15 @@ public class Main {
 	
 	// REQUIEMENT # 6: terminate <connection id.>
 	public static void terminate(int connectionID) {
-		for ( Peer peer : peerList) {
-			if (peer.getId() == connectionID) {
-				peer.terminate();
-				return;
+		int remove = -1;
+		for (int i = 0; i < peerList.size(); i++) {
+			if (peerList.get(i).getId() == connectionID) {
+				peerList.get(i).terminate();
+				remove = i;
 			}
+		}
+		if (remove != -1) {
+			peerList.remove(remove);
 		}
 	}
 	
