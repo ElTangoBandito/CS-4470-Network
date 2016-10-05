@@ -103,6 +103,18 @@ public class Main {
 	
 	// REQUIEMENT # 1: help
 	public static void showHelp() {
+		try (BufferedReader br = new BufferedReader(new FileReader("help.txt")))
+		{
+
+			String helpline;
+
+			while ((helpline = br.readLine()) != null) {
+				System.out.println(helpline);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		// TODO: show help information
 	}

@@ -1,0 +1,25 @@
+Chat Application CSULA NETWORK & PROTOCOL -- 4470
+
+These shell commands are defined internally. Type `help' to see this list.
+
+/help command: should display the command manual or user interface options.
+ 
+/myip command - show the IP address of the laptop that runs the program.
+		Note: 127.0.0.1 is NOT correct IP.
+
+/myport command: should display the port # that the program is running on.
+		connect command: should connect to a max of 3 peers and success message
+		should be displayed.
+
+/list command: should list all the connected peers with relevant details.
+ 
+/terminate command: should terminate a connection. (To test: terminate a peer,
+
+/connect to another peer and list, and then connect to 2 more peers and list.)
+
+/send command: should send the exact message as typed by the user to another
+		peer as specified in the send command. The received message should be displayed
+		with relevant information as specified.
+
+ /exit command: should quit the program. On exiting, the user terminates all the
+		connections. The other peers update their connection list by removing the exit peer. 
