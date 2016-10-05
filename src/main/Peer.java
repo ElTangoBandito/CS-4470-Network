@@ -9,11 +9,12 @@ class Peer extends Object {
 	int id;
 	String ip;
 	int port;
+	private static BufferedReader reader;
 	
 	public Peer(Socket socket, int port) {
 		this.id = counter++;
 		this.socket = socket;
-		this.port = port;
+		this.port = socket.getPort();
 		this.ip = socket.getInetAddress().getHostAddress();
 	}
 
@@ -62,7 +63,6 @@ class Peer extends Object {
 	}
 	
 	public void printMessage() {
-        BufferedReader reader;
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String message = reader.readLine();
