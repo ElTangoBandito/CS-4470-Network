@@ -11,7 +11,7 @@ class Peer extends Object {
 	int port;
 	private static BufferedReader reader;
 	
-	public Peer(Socket socket, int port) {
+	public Peer(Socket socket) {
 		this.id = counter++;
 		this.socket = socket;
 		this.port = socket.getPort();
@@ -65,9 +65,11 @@ class Peer extends Object {
 	public void printMessage() {
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String message = reader.readLine();
-            System.out.println("From: " + id);
-            System.out.println(message);
+			String response;
+	        while ((response = reader.readLine()) != null)
+	        {
+	        	System.out.println(response);
+	        }
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

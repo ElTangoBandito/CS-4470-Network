@@ -34,7 +34,7 @@ public class ProcessThread extends Thread{
 				Date time = new Date();
                 out.println("Connected on " + time.toString());
                 System.out.print("Connected to client");
-                peerList.add(new Peer(connection, listener.getLocalPort()));
+                peerList.add(new Peer(connection));
 				//DataInputStream packet = new DataInputStream(connection.getInputStream());
 				//System.out.println(packet.readUTF());
                 for (Peer peer: peerList) {

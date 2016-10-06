@@ -141,7 +141,7 @@ public class Main {
 		// TODO: Check if IP address is valid
 		try {
 			Socket peer = new Socket(destinationIP, portNumber);
-			peerList.add(new Peer(peer, portNumber));
+			peerList.add(new Peer(peer));
 			// TODO: Send message to indicate connection is successful.
 		} catch (Exception e) {
 			// TODO: Show fail to connect message
