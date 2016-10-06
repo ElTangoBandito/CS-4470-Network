@@ -1,33 +1,28 @@
 package main;
-import java.lang.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 
 public class Main {
-	// TODO: Get port number from user input
 	private static int PORTNUMBER;
 	private static boolean terminated;
 	private static Scanner baseScanner;
 	
-	// TODO: Using Map instead of List
 	private static List<Peer> peerList = new ArrayList<>();
 	
 	public static void main(String[] args) throws IOException{
-		// TODO: Process user input
 		PORTNUMBER = getPort();
-		// TODO: Multithreading
+		
 		ServerSocket listener = new ServerSocket(PORTNUMBER);
-		ProcessThread pt = new ProcessThread(listener, peerList);
-		pt.start();
+		ProcessThread serverThread = new ProcessThread(listener, peerList);
+		serverThread.start();
 		
 		terminated = false;
 		while(!terminated){
 			if (baseScanner.hasNext()){
 				String userArgs = baseScanner.nextLine();
 				String[] userInput = userArgs.split("\\s+");
-				//String userInput[] = userInputThread.getUserInput();
 				if (userInput != null){
 					if (userInput[0].equals("help")){
 						showHelp();
@@ -67,7 +62,6 @@ public class Main {
 				}
 			}
 		}
-		
 		System.out.println("Messenger shutting down...");
 	}
 	
@@ -98,6 +92,8 @@ public class Main {
 		}
 		return userPort;
 	}
+	
+	
 	// ==============  REQUIRMENT FUNCTIONS  ================
 	
 	// REQUIEMENT # 1: help
@@ -186,8 +182,5 @@ public class Main {
 			peer.terminate();
 			terminated = true;
 		}
-	}
-	
-	// ==============  HELPER FUNCTIONS  ==============
-	
+	}	
 }
