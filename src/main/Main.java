@@ -43,7 +43,6 @@ public class Main {
 						connect(userInput[1], Integer.parseInt(userInput[2]));
 					}
 					else if(userInput[0].equals("list")){
-						//peerList.addAll(pt.getPeerList());
 						listPeers();
 					}
 					else if(userInput[0].equals("terminate")){
