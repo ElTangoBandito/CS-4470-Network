@@ -245,6 +245,9 @@ class Peer extends Object {
 	}
 
 	public void printMessage() {
+		if (socket.isOutputShutdown()) {
+			return;
+		}
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String response;
