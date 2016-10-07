@@ -196,6 +196,7 @@ public class Main {
 				peerIndex = peerList.indexOf(peer);
 			}
 		}
+		System.out.println(peerIndex);
 		if (peerIndex != null){
 			peerList.remove(peerIndex);
 		}

@@ -45,6 +45,7 @@ class Peer extends Object {
 	public void terminate() {
 		try {
 			// TODO: send termination message to peer
+			System.out.println("Connection terminated with." + socket.getInetAddress());
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -55,7 +56,7 @@ class Peer extends Object {
 		PrintWriter out;
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
-			out.println(new Date().toString());
+			out.println(message);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
