@@ -254,7 +254,7 @@ class Peer extends Object {
 	        while ((response = reader.readLine()) != null)
 	        {
 	        	System.out.println("Message received from " + socket.getInetAddress());
-				System.out.println("Sender's Port :  <The port no." + socket.getPort()
+				System.out.println("Sender's Port :  <The port no." + socket.getLocalPort()
 						+ " of the sender>");
 				System.out.println("Message:  " + "<\"" + response + "\">");
 	        }
