@@ -282,14 +282,29 @@ class Server extends Thread{
 			while(true){
 				// Accepting new connections
 				Socket connection = listener.accept();
-                listeningList.add(new Peer(connection));
-                // Reading and printing message from connected peers
-                for (int i = 0; i < listeningList.size(); i++) {
-                	listeningList.get(i).printMessage();
-                }
+				Client client = new Client(new Peer(connection));
+				client.start();
+				
+//                listeningList.add(new Peer(connection));
+//                // Reading and printing message from connected peers
+//                for (int i = 0; i < listeningList.size(); i++) {
+//                	listeningList.get(i).printMessage();
+//                }
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+}
+
+class Client extends Thread {
+	private Peer peer;
+
+	Client(Peer peer){
+		this.peer = peer;
+	}
+
+	public void run(){
+		peer.printMessage();
 	}
 }
