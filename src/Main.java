@@ -1,4 +1,3 @@
-package main;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -7,17 +6,14 @@ import java.util.*;
 public class Main {
 	private static int PORTNUMBER;
 	private static boolean terminated;
-	private static Scanner baseScanner;
-	
+	private static Scanner baseScanner = new Scanner(System.in);
 	private static List<Peer> peerList = new ArrayList<>();
-	
+
 	public static void main(String[] args) throws IOException{
-		PORTNUMBER = getPort();
-		
-		ServerSocket listener = new ServerSocket(PORTNUMBER);
-		ProcessThread serverThread = new ProcessThread(listener, peerList);
+		PORTNUMBER = getPort(args);
+		Server serverThread = new Server(PORTNUMBER);
 		serverThread.start();
-		
+
 		terminated = false;
 		while(!terminated){
 			if (baseScanner.hasNext()){
@@ -31,7 +27,7 @@ public class Main {
 						System.out.println(getMyIP());
 					}
 					else if(userInput[0].equals("myport")){
-						System.out.println(getPort());
+						System.out.println(getMyPortNumber());
 					}
 					else if(userInput[0].equals("connect")){
 						//needs to do checking
@@ -64,56 +60,36 @@ public class Main {
 		}
 		System.out.println("Messenger shutting down...");
 	}
-	
-	public static int getPort(){
-		int userPort = 0;
-		baseScanner = new Scanner(System.in);
-		while(baseScanner.hasNextLine()){
-			String userInput = baseScanner.nextLine();
-			String[] userArgs = userInput.split("\\s+");
-			
-			if (userArgs.length == 2){
-				if (userArgs[0].equals("./chat")){
-					try{
-						userPort = Integer.parseInt(userArgs[1]);
-						if (userPort >= 1000 && userPort <= 65536){
-							//baseScanner.close();
-							break;
-						}
-					}catch(Exception e){
-						e.printStackTrace();
-						userPort = 0;
-					}
-				}
-			}
-			else{
-				continue;
-			}
+
+	public static int getPort(String[] userArgs){
+		int userPort;
+		try{
+			userPort = Integer.parseInt(userArgs[0]);
+			return userPort;
+		}catch(Exception e){
+//			e.printStackTrace();
+			userPort = (new Random()).nextInt(5000)+10000;
+			System.out.println("Random Generated Port: " + userPort);
+			return userPort;
 		}
-		return userPort;
 	}
-	
-	
+
+
 	// ==============  REQUIRMENT FUNCTIONS  ================
-	
+
 	// REQUIEMENT # 1: help
 	public static void showHelp() {
 		try (BufferedReader br = new BufferedReader(new FileReader("help.txt")))
 		{
-
 			String helpline;
-
 			while ((helpline = br.readLine()) != null) {
 				System.out.println(helpline);
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		// TODO: show help information
 	}
-	
+
 	// REQUIEMENT # 2: myip
 	public static String getMyIP() {
 		InetAddress ip;
@@ -125,25 +101,26 @@ public class Main {
 		}
 		return "";
 	}
-	
+
 	// REQUIEMENT # 3: myport
 	public static int getMyPortNumber() {
 		return PORTNUMBER;
 	}
-	
+
 	// REQUIEMENT # 4: connect <destination> <port no>
 	public static void connect(String destinationIP, int portNumber) {
 		// TODO: Check if IP address is valid
 		try {
-			Socket peer = new Socket(destinationIP, portNumber);
-			peerList.add(new Peer(peer));
-			// TODO: Send message to indicate connection is successful.
+			Socket socket = new Socket(destinationIP, portNumber);
+			Peer peer = new Peer(socket, portNumber);
+			peer.sendMessage("You have connected to " + socket.getLocalAddress().toString());
+			System.out.println("You have connected to " + destinationIP);
+			peerList.add(peer);
 		} catch (Exception e) {
-			// TODO: Show fail to connect message
 			System.out.println("Can not connect to " + destinationIP + ". Error:" + e.toString());
 		}
 	}
-	
+
 	// REQUIEMENT # 5: list
 	public static void listPeers() {
 		System.out.println("id: IPaddress   PortNo.");
@@ -151,21 +128,18 @@ public class Main {
 			System.out.println(peer.toString());
 		}
 	}
-	
+
 	// REQUIEMENT # 6: terminate <connection id.>
 	public static void terminate(int connectionID) {
-		int remove = -1;
 		for (int i = 0; i < peerList.size(); i++) {
 			if (peerList.get(i).getId() == connectionID) {
 				peerList.get(i).terminate();
-				remove = i;
+				peerList.remove(i);
+				return;
 			}
 		}
-		if (remove != -1) {
-			peerList.remove(remove);
-		}
 	}
-	
+
 	// REQUIEMENT # 7: send <connection id.> <message>
 	public static void send(int connectionID, String message) {
 		for ( Peer peer : peerList) {
@@ -175,12 +149,104 @@ public class Main {
 			}
 		}
 	}
-	
+
 	// REQUIEMENT # 8: exit
 	public static void exit() {
 		for ( Peer peer : peerList) {
 			peer.terminate();
-			terminated = true;
 		}
-	}	
+		terminated = true;
+	}
+}
+
+
+class Peer extends Object {
+	private static int connectedByCounter = 1;
+	private static int connectedToCounter = 1;
+	Socket socket;
+	int id;
+	int port;
+
+	public Peer(Socket socket) {
+		this.id = connectedByCounter++;
+		this.socket = socket;
+		this.port = socket.getPort();
+	}
+
+	public Peer(Socket socket, int portNumber) {
+		this.id = connectedToCounter++;
+		this.socket = socket;
+		this.port = portNumber;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		String ip = socket.getInetAddress().getHostAddress();
+		return id + ": " + ip + "    " + port;
+	}
+
+	public void terminate() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendMessage(String message) {
+		PrintWriter out;
+		try {
+			out = new PrintWriter(socket.getOutputStream(), true);
+			out.println(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void printMessage() {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String response;
+	        while ((response = reader.readLine()) != null)
+	        {
+	        	System.out.println(response);
+	        }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+class Server extends Thread{
+	List<Peer> listeningList;
+	ServerSocket listener;
+
+	Server(int listeningPortNumber){
+		try {
+			listener = new ServerSocket(listeningPortNumber);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		listeningList = new ArrayList<Peer>();
+	}
+
+	public void run(){
+		try {
+			while(true){
+				// Accepting new connections
+				Socket connection = listener.accept();
+                listeningList.add(new Peer(connection));
+                // Reading and printing message from connected peers
+                for (int i = 0; i < listeningList.size(); i++) {
+                	listeningList.get(i).printMessage();
+                }
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
