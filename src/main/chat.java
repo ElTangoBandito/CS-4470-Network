@@ -25,7 +25,7 @@ public class chat extends Thread {
 				try {
 					out = new PrintWriter(s.getOutputStream(), true);
 					out.println(message);
-					System.out.println("Send successfully£¡");
+					System.out.println("Send successfully");
 					System.out.println();
 				} catch (IOException e) {
 					e.printStackTrace();
