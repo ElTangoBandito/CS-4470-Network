@@ -253,7 +253,10 @@ class Peer extends Object {
 			String response;
 	        while ((response = reader.readLine()) != null)
 	        {
-	        	System.out.println(response);
+	        	System.out.println("Message received from " + socket.getInetAddress());
+				System.out.println("Sender's Port :  <The port no." + socket.getPort()
+						+ " of the sender>");
+				System.out.println("Message:  " + "<\"" + response + "\">");
 	        }
 		} catch (IOException e) {
 			e.printStackTrace();
