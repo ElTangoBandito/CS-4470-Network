@@ -10,7 +10,8 @@ public class Main {
 	private static List<Peer> peerList = new ArrayList<>();
 
 	public static void main(String[] args) throws IOException{
-		PORTNUMBER = getPort(args);
+		PORTNUMBER = getPort();
+		System.out.println("Messenger online.");
 		Server serverThread = new Server(PORTNUMBER);
 		serverThread.start();
 
@@ -30,24 +31,31 @@ public class Main {
 						System.out.println(getMyPortNumber());
 					}
 					else if(userInput[0].equals("connect")){
-						//needs to do checking
-						connect(userInput[1], Integer.parseInt(userInput[2]));
+						if (userInput.length < 3){
+							if (checkInt(userInput[2])){
+								connect(userInput[1], Integer.parseInt(userInput[2]));
+							}
+						}
 					}
 					else if(userInput[0].equals("list")){
 						listPeers();
 					}
 					else if(userInput[0].equals("terminate")){
-						//do checking
-						terminate(Integer.parseInt(userInput[1]));
+						if (userInput.length < 2){
+							if (checkInt(userInput[1])){
+								terminate(Integer.parseInt(userInput[1]));
+							}
+						}
 					}
 					else if(userInput[0].equals("send")){
-						//do checking
-						String message = "";
-						for (int i = 2; i < userInput.length; i++){
-							message += userInput[i];
-							message += " ";
+						if (checkInt(userInput[1])){
+							String message = "";
+							for (int i = 2; i < userInput.length; i++){
+								message += userInput[i];
+								message += " ";
+							}
+							send(Integer.parseInt(userInput[1]), message);
 						}
-						send(Integer.parseInt(userInput[1]), message);
 					}
 					else if(userInput[0].equals("exit")){
 						exit();
@@ -60,18 +68,47 @@ public class Main {
 		}
 		System.out.println("Messenger shutting down...");
 	}
-
-	public static int getPort(String[] userArgs){
-		int userPort;
-		try{
-			userPort = Integer.parseInt(userArgs[0]);
-			return userPort;
-		}catch(Exception e){
-//			e.printStackTrace();
-			userPort = (new Random()).nextInt(5000)+10000;
-			System.out.println("Random Generated Port: " + userPort);
-			return userPort;
+	
+	public static boolean checkInt(String input){
+		boolean result = false;
+		try {
+			Integer.parseInt(input);
+			
+			result = true;
+			} catch (NumberFormatException e){
+				
+			}
+		return result;
+		
+	}
+	
+	public static int getPort(){
+		int userPort = 0;
+		baseScanner = new Scanner(System.in);
+		while(baseScanner.hasNextLine()){
+			String userInput = baseScanner.nextLine();
+			String[] userArgs = userInput.split("\\s+");
+			
+			if (userArgs.length == 2){
+				if (userArgs[0].equals("./chat")){
+					try{
+						userPort = Integer.parseInt(userArgs[1]);
+						if (userPort >= 1000 && userPort <= 65536){
+							//baseScanner.close();
+							break;
+						}
+					}catch(Exception e){
+						e.printStackTrace();
+						userPort = 0;
+					}
+				}
+			}
+			else{
+				continue;
+			}
 		}
+		return userPort;
+		
 	}
 
 
