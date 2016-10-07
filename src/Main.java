@@ -31,7 +31,7 @@ public class Main {
 						System.out.println(getMyPortNumber());
 					}
 					else if(userInput[0].equals("connect")){
-						if (userInput.length < 3){
+						if (userInput.length == 3){
 							if (checkInt(userInput[2])){
 								connect(userInput[1], Integer.parseInt(userInput[2]));
 							}
@@ -41,7 +41,7 @@ public class Main {
 						listPeers();
 					}
 					else if(userInput[0].equals("terminate")){
-						if (userInput.length < 2){
+						if (userInput.length == 2){
 							if (checkInt(userInput[1])){
 								terminate(Integer.parseInt(userInput[1]));
 							}
@@ -245,12 +245,18 @@ class Peer extends Object {
 	}
 
 	public void printMessage() {
+		if (socket.isOutputShutdown()) {
+			return;
+		}
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String response;
 	        while ((response = reader.readLine()) != null)
 	        {
-	        	System.out.println(response);
+	        	System.out.println("Message received from " + socket.getInetAddress());
+				System.out.println("Sender's Port :  <The port no." + port
+						+ " of the sender>");
+				System.out.println("Message:  " + "<\"" + response + "\">");
 	        }
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -276,14 +282,29 @@ class Server extends Thread{
 			while(true){
 				// Accepting new connections
 				Socket connection = listener.accept();
-                listeningList.add(new Peer(connection));
-                // Reading and printing message from connected peers
-                for (int i = 0; i < listeningList.size(); i++) {
-                	listeningList.get(i).printMessage();
-                }
+				Client client = new Client(new Peer(connection));
+				client.start();
+				
+//                listeningList.add(new Peer(connection));
+//                // Reading and printing message from connected peers
+//                for (int i = 0; i < listeningList.size(); i++) {
+//                	listeningList.get(i).printMessage();
+//                }
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+}
+
+class Client extends Thread {
+	private Peer peer;
+
+	Client(Peer peer){
+		this.peer = peer;
+	}
+
+	public void run(){
+		peer.printMessage();
 	}
 }
