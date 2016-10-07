@@ -31,7 +31,7 @@ public class Main {
 						System.out.println(getMyPortNumber());
 					}
 					else if(userInput[0].equals("connect")){
-						if (userInput.length < 3){
+						if (userInput.length != 3){
 							if (checkInt(userInput[2])){
 								connect(userInput[1], Integer.parseInt(userInput[2]));
 							}
@@ -41,7 +41,7 @@ public class Main {
 						listPeers();
 					}
 					else if(userInput[0].equals("terminate")){
-						if (userInput.length < 2){
+						if (userInput.length != 2){
 							if (checkInt(userInput[1])){
 								terminate(Integer.parseInt(userInput[1]));
 							}
