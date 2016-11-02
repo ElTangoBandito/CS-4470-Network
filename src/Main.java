@@ -9,6 +9,13 @@ public class Main {
 	private static Scanner baseScanner = new Scanner(System.in);
 	private static List<Peer> peerList = new ArrayList<>();
 
+	//Project 2 variables from parsing
+	private static int delay;
+	private static int numberOfServers;
+	private static int numerOfEdges;
+	private static Map<Integer, List<String>> connectionsMap = new HashMap<Integer, List<String>>();
+	private static int[][] vectorTable = new int[5][5];
+
 	public static void main(String[] args) throws IOException{
 		PORTNUMBER = getPort();
 		System.out.println("Messenger online.");
@@ -60,6 +67,28 @@ public class Main {
 					else if(userInput[0].equals("exit")){
 						exit();
 					}
+					else if(userInput[0].equals("server")){
+						if(userInput.length == 5){
+							if(userInput[1].equals("-t") && userInput[3].equals("-i")){
+								delay = Integer.parseInt(userInput[4]);
+								parseTopology(userInput[2]);
+								/* Testing prints
+								System.out.println("Delay :" + Integer.toString(delay));
+								System.out.println("Servers :" + Integer.toString(numberOfServers));
+								System.out.println("Edges :" + Integer.toString(numerOfEdges));
+								System.out.println(connectionsMap);
+								System.out.println("Table costs :");
+								System.out.println(vectorTable[1][2]);
+								System.out.println(vectorTable[1][3]);
+								System.out.println(vectorTable[1][4]);
+								*/
+							}
+						}
+						//server -t <topology-file-name> -i <routing-update-interval>
+					}
+					else if(userInput[0].equals("update")){
+						updateVector(userInput);
+					}
 					else{
 						System.out.println("Invalid command or parameters, type in 'help' for details");
 					}
@@ -109,6 +138,13 @@ public class Main {
 		}
 		return userPort;
 		
+	}
+
+	//Initialize 2D array
+	public static void initializeVectorTable(){
+		for(int[] row: vectorTable){
+			Arrays.fill(row, Integer.MAX_VALUE);
+		}
 	}
 
 
@@ -193,6 +229,66 @@ public class Main {
 			peer.terminate();
 		}
 		terminated = true;
+	}
+
+	//Parsing Topology
+	public static void parseTopology(String filePath){
+		int counter = 0;
+		try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
+		{
+			String nextLine;
+			while ((nextLine = br.readLine()) != null) {
+				if(counter == 0){
+					numberOfServers = Integer.parseInt(nextLine);
+				}
+				else if(counter == 1){
+					numerOfEdges = Integer.parseInt(nextLine);
+				}
+				else if(counter > 1 && counter < 6){
+					String[] lineArgs = nextLine.split("\\s+");
+					List<String> ipPort = new ArrayList<String>();
+					ipPort.add(lineArgs[1]);
+					ipPort.add(lineArgs[2]);
+					connectionsMap.put(Integer.parseInt(lineArgs[0]), ipPort);
+				}
+				else{
+					String[] args = nextLine.split("\\s+");
+					int from = Integer.parseInt(args[0]);
+					int to = Integer.parseInt(args[1]);
+					int cost = Integer.parseInt(args[2]);
+					vectorTable[from][to] = cost;
+				}
+				counter++;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//Update Vector
+	public static void updateVector(String[] userInput){
+		if(userInput.length == 4){
+			try{
+				int from = Integer.parseInt(userInput[1]);
+				int to = Integer.parseInt(userInput[2]);
+				int cost = Integer.MAX_VALUE;
+				if(!userInput[3].equals("inf")){
+					try{
+						cost = Integer.parseInt(userInput[3]);
+					} catch(NumberFormatException e){
+						System.out.println("Invalid Cost");
+					}
+				}
+				if(from > 0 && from < 5 && to > 0 && from < 5 && cost > 0){
+					vectorTable[from][to] = cost;
+				}
+				else{
+					System.out.println("Invalid parameters");
+				}
+			} catch (NumberFormatException e){
+				System.out.println("Invalid server IDs");
+			}
+		}
 	}
 }
 
