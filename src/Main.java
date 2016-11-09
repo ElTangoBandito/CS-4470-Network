@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 public class Main {
@@ -147,6 +148,59 @@ public class Main {
 		}
 	}
 
+	public static void calculatePath(int from, int to) {
+		// just for testing 
+		vectorTable = new int[][] {
+			{0, 0, 0, 0, 0},
+			{0, 0, 7, 4, 5},
+			{0, 7, 0, 2, -1},
+			{0, 4, 2, 0, 1},
+			{0, 5, -1, 1, 0}
+		};
+		// path finding
+		if (vectorTable.length < 1) { return; }
+		boolean visited[] = new boolean[vectorTable[0].length];
+		int at = from;
+		visited[0] = true;
+		HashMap<Integer, Integer> idDistance = new HashMap<>();
+		HashMap<Integer, Integer> pathRecord = new HashMap<>();
+		int distanceToHere = 0;
+		while (at != to) {
+			visited[at] = true;
+			// go to each airport
+			for(int i = 1; i < vectorTable[at].length; i++) {
+				if (vectorTable[at][i] > 0 && !visited[i]) {
+					if (!idDistance.containsKey(i) || idDistance.get(i) > distanceToHere+vectorTable[at][i]) {
+						idDistance.put(i, distanceToHere+vectorTable[at][i]);
+						pathRecord.put(i, at);
+					}
+				}
+			}
+			// find min
+			int minId = 0, minDist = Integer.MAX_VALUE;
+			for (Entry<Integer, Integer> entry: idDistance.entrySet()) {
+				if (!visited[entry.getKey()] && entry.getValue() < minDist) {
+					minId = entry.getKey();
+					minDist = entry.getValue();
+				}
+			}
+			// set at to min
+			distanceToHere = minDist;
+			at = minId;
+			visited[at] = true;
+		}
+		// show path
+		List<Integer> path = new ArrayList<>();
+		while (at != from) {
+			path.add(at);
+			at = pathRecord.get(at);
+		}
+		Collections.reverse(path);
+		for (int id: path) {
+			System.out.println(id);
+		}
+		System.out.println("Distance: " + distanceToHere);
+	}
 
 	// ==============  REQUIRMENT FUNCTIONS  ================
 
