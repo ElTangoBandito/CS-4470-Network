@@ -11,6 +11,7 @@ public class Main {
 	private static List<Peer> peerList = new ArrayList<>();
 
 	//Project 2 variables from parsing
+	private static int myId;
 	private static int delay;
 	private static int numberOfServers;
 	private static int numerOfEdges;
@@ -308,6 +309,7 @@ public class Main {
 				else{
 					String[] args = nextLine.split("\\s+");
 					int from = Integer.parseInt(args[0]);
+					myId = from;
 					int to = Integer.parseInt(args[1]);
 					int cost = Integer.parseInt(args[2]);
 					vectorTable[from][to] = cost;
