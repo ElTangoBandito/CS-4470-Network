@@ -66,6 +66,15 @@ public class Main {
 							send(Integer.parseInt(userInput[1]), message);
 						}
 					}
+					else if(userInput[0].equals("step")){ 
+						if (checkInt(userInput[1])){
+							send(Integer.parseInt(userInput[1]), initializeNeighborTable());
+						}
+					}
+						
+						
+						
+						
 					else if(userInput[0].equals("exit")){
 						exit();
 					}
@@ -285,6 +294,12 @@ public class Main {
 		}
 		terminated = true;
 	}
+	
+	//Requirement #9 : Step
+	public static void sendv(int myip, int myport, String messsage) {
+		
+	}
+	
 
 	//Parsing Topology
 	public static void parseTopology(String filePath){
@@ -320,6 +335,18 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
+
+	// initialize neighbor table 
+	public static String initializeNeighborTable() {
+		StringBuilder sb = new StringBuilder();
+		for (int[] row : vectorTable) {
+			for (int col : row)
+				sb.append(col + " ");
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+
 
 	//Update Vector
 	public static void updateVector(String[] userInput){
