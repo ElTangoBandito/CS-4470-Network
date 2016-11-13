@@ -71,7 +71,9 @@ public class Main {
 							send(Integer.parseInt(userInput[1]), initializeNeighborTable());
 						}
 					}
-						
+					else if(userInput[0].equals("display")){
+						display();
+					}	
 						
 						
 						
@@ -107,6 +109,147 @@ public class Main {
 			}
 		}
 		System.out.println("Messenger shutting down...");
+	}
+
+	private static final int INF = -1;
+	private static final int MIN_LENGTH = 3;
+	
+	
+	public static void display(){
+		display(vectorTable,myId);
+	}
+	
+	public static void display(int [][]array, int myId){
+		if(array.length < 1)
+			return;
+		
+		
+		//Default row name is to i
+		String [] rowName = new String[array.length];
+		//colunm name is to j
+		String [] columnName = new String[array[0].length];
+		for (int i = 0; i < rowName.length; i++) {
+			rowName[i] = "to " + i;
+		}
+		for (int i = 0; i < columnName.length; i++) {
+			columnName[i] = "via " + i;
+		}
+		
+		display(rowName,columnName,array,myId);
+	}
+	
+	
+	private static void rep(String str, int times) {
+		for (int i = 0; i < times; i++) {
+			System.out.print(str);
+		}
+	}
+	
+	private static void drawLine(int [] length,int type){		
+		if(type == 0)
+			System.out.print("┌");
+		else if(type == 1)
+			System.out.print("├");
+		else if(type == 2)
+			System.out.print("└");
+		for (int i = 0; i < length.length; i++) {
+			rep("─", length[i]);
+			if (i == length.length - 1){
+				if(type == 0)
+					System.out.print("┐");
+				else if(type == 1)
+					System.out.print("┤");
+				else if(type == 2)
+					System.out.print("┘");
+			}
+			else{
+				if(type == 0)
+					System.out.print("┬");
+				else if(type == 1)
+					System.out.print("┼");
+				else if(type == 2)
+					System.out.print("┴");
+			}
+		}
+		System.out.println();
+	}
+	
+	private static int maxLength(String[] names){
+		int max = 0;
+		for (int i = 0; i < names.length; i++) {
+			if (max < names[i].length()){
+				max = names[i].length();
+			}
+		}
+		return max;
+	}
+
+	
+	public static void display(String[] rowName, String[] columnName, int[][] array, int myId) {
+	
+		//calculate columnName length
+		int [] length = new int [columnName.length + 1];
+		length[0] = maxLength(rowName);
+		
+		//calculate length of each row
+		for (int i = 0; i < columnName.length; i++) {
+			length[i+1] = columnName[i].length();
+			for (int j = 0; j < rowName.length; j++) {
+				int numberLength = String.valueOf(array[j][i]).length();
+				if(numberLength > length[i+1]){
+					length[i+1] = numberLength;
+				}
+			}
+		}
+		
+		//check if less than MIN_LENGTH
+		for (int i = 0; i < length.length; i++) {
+			if(length[i] < MIN_LENGTH)
+				length[i] = MIN_LENGTH;
+		}
+		
+		
+		//draw top line
+		drawLine(length, 0);
+		System.out.print("│");
+		rep(" ", length[0]);
+		for (int i = 0; i < columnName.length; i++) {
+			System.out.print("│");
+			System.out.print(columnName[i]);
+		}
+		System.out.println("│");
+		
+		
+		for (int i = 0; i < rowName.length; i++) {
+			
+			//draw seperating line
+			drawLine(length, 1);
+			
+			System.out.print("│");
+			//draw for rowName
+			System.out.print(String.format("%"+length[0]+"s", rowName[i]));
+			for (int j = 0; j < columnName.length; j++) {
+				System.out.print("│");
+
+				//draw data
+				//if the line the same as ID then leave it empty
+				if(i == myId || j == myId){
+					rep(" ", length[j+1]);
+				}else if(array[i][j] == INF){
+					//check if the data is infinite, INF definition on top
+					System.out.print(String.format("%"+length[j+1]+"s", "INF"));
+				}else{
+					System.out.print(String.format("%"+length[j+1]+"d", array[i][j]));					
+				}
+				
+			}
+			System.out.println("│");
+		}
+	
+
+		//draw end
+		drawLine(length, 2);
+
 	}
 	
 	public static boolean checkInt(String input){
