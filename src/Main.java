@@ -71,9 +71,7 @@ public class Main {
 							send(Integer.parseInt(userInput[1]), initializeNeighborTable());
 						}
 					}
-					else if(userInput[0].equals("display")){
-						display();
-					}	
+						
 						
 						
 						
