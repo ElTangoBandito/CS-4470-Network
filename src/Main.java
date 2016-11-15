@@ -143,30 +143,30 @@ public class Main {
 		}
 	}
 	
-	private static void drawLine(int [] length,int type){		
-		if(type == 0)
-			System.out.print("┌");
-		else if(type == 1)
-			System.out.print("├");
-		else if(type == 2)
-			System.out.print("└");
+	private static void drawLine(int[] length, int type) {
+		if (type == 0)
+			System.out.print("|");
+		else if (type == 1)
+			System.out.print("|");
+		else if (type == 2)
+			System.out.print("|");
 		for (int i = 0; i < length.length; i++) {
 			rep("─", length[i]);
-			if (i == length.length - 1){
-				if(type == 0)
-					System.out.print("┐");
-				else if(type == 1)
-					System.out.print("┤");
-				else if(type == 2)
-					System.out.print("┘");
-			}
-			else{
-				if(type == 0)
-					System.out.print("┬");
-				else if(type == 1)
-					System.out.print("┼");
-				else if(type == 2)
-					System.out.print("┴");
+			if (i == length.length - 1) {
+				if (type == 0)
+					System.out.print("|");
+				else if (type == 1)
+					System.out.print("|");
+				else if (type == 2)
+					System.out.print("|");
+			} else {
+				if (type == 0)
+					System.out.print("|");
+				else if (type == 1)
+					System.out.print("|");
+				else if (type == 2)
+					System.out.print("|");
+
 			}
 		}
 		System.out.println();
