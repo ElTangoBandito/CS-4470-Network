@@ -67,9 +67,9 @@ public class Main {
 						}
 					}
 					else if(userInput[0].equals("step")){ 
-						if (checkInt(userInput[1])){
-							send(Integer.parseInt(userInput[1]), initializeNeighborTable());
-						}
+						//Send to all neighbor
+						//System.out.println(initializeNeighborTable());
+						//send(Integer.parseInt(userInput[1]), initializeNeighborTable());
 					}
 						
 						
@@ -83,6 +83,7 @@ public class Main {
 							if(userInput[1].equals("-t") && userInput[3].equals("-i")){
 								delay = Integer.parseInt(userInput[4]);
 								parseTopology(userInput[2]);
+								//Send vector to everyone on start.
 								/* Testing prints
 								System.out.println("Delay :" + Integer.toString(delay));
 								System.out.println("Servers :" + Integer.toString(numberOfServers));
@@ -96,9 +97,23 @@ public class Main {
 							}
 						}
 						//server -t <topology-file-name> -i <routing-update-interval>
+						//server -t topology.txt -i 5
 					}
 					else if(userInput[0].equals("update")){
 						updateVector(userInput);
+					}
+					else if(userInput[0].equals("beginR")){
+						for (int i = 1; i < 5; i++){
+							if (i != myId){
+								List<String> ipAndPort = connectionsMap.get(i);
+								String ip = ipAndPort.get(0);
+								int port = Integer.parseInt(ipAndPort.get(1));
+								String message = initializeNeighborTable();
+								System.out.println(ip);
+								System.out.println(port);
+								System.out.println(message);
+							}
+						}
 					}
 					else{
 						System.out.println("Invalid command or parameters, type in 'help' for details");
@@ -480,11 +495,17 @@ public class Main {
 	// initialize neighbor table 
 	public static String initializeNeighborTable() {
 		StringBuilder sb = new StringBuilder();
-		for (int[] row : vectorTable) {
-			for (int col : row)
-				sb.append(col + " ");
-			sb.append("\n");
-		}
+		int[] row = vectorTable[myId];
+		int counter = 0;
+			for (int col : row){
+				if (counter == 0){
+					sb.append(String.valueOf(myId) + " ");
+					counter ++;
+				}
+				else{
+					sb.append(col + " ");
+				}
+			}
 		return sb.toString();
 	}
 
@@ -514,6 +535,8 @@ public class Main {
 			}
 		}
 	}
+	
+	
 }
 
 
