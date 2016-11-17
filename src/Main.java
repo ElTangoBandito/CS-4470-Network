@@ -352,6 +352,17 @@ public class Main {
 		}
 		System.out.println("Distance: " + distanceToHere);
 	}
+	
+	public void sendMessage(String message, String ip, int port) throws Exception {
+        DatagramSocket clientSocket = new DatagramSocket();
+        InetAddress addr = InetAddress.getByName(ip);
+        byte[] sendData = new byte[1024];
+        sendData = message.getBytes();
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, addr, port);
+        clientSocket.send(sendPacket);
+        clientSocket.close();
+
+	}
 
 	// ==============  REQUIRMENT FUNCTIONS  ================
 
@@ -626,5 +637,32 @@ class Client extends Thread {
 
 	public void run(){
 		peer.printMessage();
+	}
+}
+
+class UDPReceiver extends Thread {
+	private int [][] vectorTable;
+	private DatagramSocket serverSocket;
+	
+	public UDPReceiver(int[][] vectorTable, int port) throws Exception {
+		this.vectorTable = vectorTable;
+		serverSocket = new DatagramSocket(port);
+	}
+	
+	public void run() {
+        
+        byte[] receiveData = new byte[1024];
+        while (true) {
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            try {
+				serverSocket.receive(receivePacket);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            String sentence = new String(receivePacket.getData());
+            
+            // TODO: parse the data
+            System.out.println("RECEIVED: " + sentence);
+        }
 	}
 }
