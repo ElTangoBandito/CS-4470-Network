@@ -100,6 +100,19 @@ public class Main {
 					else if(userInput[0].equals("update")){
 						updateVector(userInput);
 					}
+					else if(userInput[0].equals("beginR")){
+						for (int i = 1; i < 5; i++){
+							if (i != myId){
+								List<String> ipAndPort = connectionsMap.get(i);
+								String ip = ipAndPort.get(0);
+								int port = Integer.parseInt(ipAndPort.get(1));
+								String message = initializeNeighborTable();
+								System.out.println(ip);
+								System.out.println(port);
+								System.out.println(message);
+							}
+						}
+					}
 					else{
 						System.out.println("Invalid command or parameters, type in 'help' for details");
 					}
@@ -489,15 +502,21 @@ public class Main {
 	}
 
 	// initialize neighbor table 
-	public static String initializeNeighborTable() {
-		StringBuilder sb = new StringBuilder();
-		for (int[] row : vectorTable) {
-			for (int col : row)
-				sb.append(col + " ");
-			sb.append("\n");
+	  public static String initializeNeighborTable() {
+			StringBuilder sb = new StringBuilder();
+			int[] row = vectorTable[myId];
+			int counter = 0;
+				for (int col : row){
+					if (counter == 0){
+						sb.append(String.valueOf(myId) + " ");
+						counter ++;
+					}
+					else{
+						sb.append(col + " ");
+					}
+				}
+			return sb.toString();
 		}
-		return sb.toString();
-	}
 
 
 	//Update Vector
