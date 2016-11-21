@@ -24,6 +24,8 @@ public class Main {
 		Server serverThread = new Server(PORTNUMBER);
 		serverThread.start();
 
+		
+
 		terminated = false;
 		while(!terminated){
 			if (baseScanner.hasNext()){
@@ -93,9 +95,17 @@ public class Main {
 								System.out.println(vectorTable[1][3]);
 								System.out.println(vectorTable[1][4]);
 								*/
+								printVectorTable(vectorTable);
+								try {
+									UDPReceiver receiver = new UDPReceiver(vectorTable, PORTNUMBER, delay);
+									receiver.run();
+								} catch (Exception e1) {
+									e1.printStackTrace();
+								}
 							}
 						}
 						//server -t <topology-file-name> -i <routing-update-interval>
+						// server -t topology.txt -i 100
 					}
 					else if(userInput[0].equals("update")){
 						updateVector(userInput);
@@ -549,6 +559,16 @@ public class Main {
 			}
 		}
 	}
+	
+	public static void printVectorTable(int[][] vectorTable) {
+		System.out.println("Vector Table:");
+		for (int[] arr: vectorTable) {
+			for (int distance: arr) {
+				System.out.print(distance + " ");
+			}
+			System.out.println();
+		}
+	}
 }
 
 
@@ -667,32 +687,34 @@ class Client extends Thread {
 class UDPReceiver extends Thread {
 	private int [][] vectorTable;
 	private DatagramSocket serverSocket;
+	private int port;
 	
-	public UDPReceiver(int[][] vectorTable, int port) throws Exception {
+	public UDPReceiver(int[][] vectorTable, int port, int delay) throws SocketException {
 		this.vectorTable = vectorTable;
+		this.port = port;
 		serverSocket = new DatagramSocket(port);
 	}
 	
 	public void run() {
         byte[] receiveData = new byte[1024];
         while (true) {
-            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        	System.out.println("udp receiver running");
             try {
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            String sentence = new String(receivePacket.getData());
-            
-            System.out.println("RECEIVED: " + sentence);
-            String[] distances = sentence.split(" ");
-            try {
+				
+	            String sentence = new String(receivePacket.getData());
+	            
+	            System.out.println("RECEIVED: " + sentence);
+	            String[] distances = sentence.split(" ");
+
 				int sender = Integer.valueOf(distances[0]);
 				for (int i = 1; i < 5; i++) {
 					vectorTable[sender][i] = Integer.valueOf(distances[i]);
 				}
-			} catch (Exception e) {
-				System.out.println("Error on parsing vector message");
+	            printVectorTable();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
         }
 	}
@@ -703,6 +725,7 @@ class UDPReceiver extends Thread {
 			for (int distance: arr) {
 				System.out.print(distance + " ");
 			}
+			System.out.println();
 		}
 	}
 }
