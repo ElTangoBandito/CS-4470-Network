@@ -179,7 +179,6 @@ public class Main {
 					System.out.print("|");
 				else if (type == 2)
 					System.out.print("|");
-
 			}
 		}
 		System.out.println();
@@ -374,7 +373,6 @@ public class Main {
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, addr, port);
         clientSocket.send(sendPacket);
         clientSocket.close();
-
 	}
 
 	// ==============  REQUIRMENT FUNCTIONS  ================
@@ -669,7 +667,6 @@ class UDPReceiver extends Thread {
 	}
 	
 	public void run() {
-        
         byte[] receiveData = new byte[1024];
         while (true) {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -680,8 +677,25 @@ class UDPReceiver extends Thread {
 			}
             String sentence = new String(receivePacket.getData());
             
-            // TODO: parse the data
             System.out.println("RECEIVED: " + sentence);
+            String[] distances = sentence.split(" ");
+            try {
+				int sender = Integer.valueOf(distances[0]);
+				for (int i = 1; i < 5; i++) {
+					vectorTable[sender][i] = Integer.valueOf(distances[i]);
+				}
+			} catch (Exception e) {
+				System.out.println("Error on parsing vector message");
+			}
         }
+	}
+	
+	public void printVectorTable() {
+		System.out.println("Vector Table:");
+		for (int[] arr: vectorTable) {
+			for (int distance: arr) {
+				System.out.print(distance + " ");
+			}
+		}
 	}
 }
