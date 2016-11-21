@@ -107,9 +107,16 @@ public class Main {
 								String ip = ipAndPort.get(0);
 								int port = Integer.parseInt(ipAndPort.get(1));
 								String message = initializeNeighborTable();
+								try {
+									sendMessage(message, ip, port);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								/*
 								System.out.println(ip);
 								System.out.println(port);
 								System.out.println(message);
+								*/
 							}
 						}
 					}
@@ -365,7 +372,7 @@ public class Main {
 		System.out.println("Distance: " + distanceToHere);
 	}
 	
-	public void sendMessage(String message, String ip, int port) throws Exception {
+	public static void sendMessage(String message, String ip, int port) throws Exception {
         DatagramSocket clientSocket = new DatagramSocket();
         InetAddress addr = InetAddress.getByName(ip);
         byte[] sendData = new byte[1024];
