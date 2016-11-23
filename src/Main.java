@@ -341,6 +341,11 @@ public class Main {
 		for(int[] row: vectorTable){
 			Arrays.fill(row, 100);
 		}
+		
+		// TODO: move this to somewhere else
+		for (int i = 0; i < 5; i++) {
+			paths.add(new ArrayList<>());
+		}
 	}
 
 	public static int calculatePath(int from, int to) {
@@ -390,12 +395,6 @@ public class Main {
 	public static void printPaths() {
 		for (int i = 0; i < 5; i++) {
 			ArrayList<Integer> path = paths.get(i);
-			if (!path.isEmpty()) {
-				System.out.println("Path to " + i);
-				for (Integer node: path) {
-					System.out.println(node + " ");
-				}
-			}
 		}
 	}
 	
@@ -587,7 +586,7 @@ public class Main {
 					System.out.print(distance + " ");
 				}
 			}
-			System.out.println("==========");
+			System.out.println("\n==========");
 		}
 	}
 	public static boolean compareTables() {
@@ -774,7 +773,7 @@ class UDPReceiver extends Thread {
 					System.out.print(distance + " ");
 				}
 			}
-			System.out.println("==========");
+			System.out.println("\n==========");
 		}
 	}
 	
