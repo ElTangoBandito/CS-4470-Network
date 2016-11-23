@@ -137,6 +137,11 @@ public class Main {
 								System.out.println("Step intiated");
 								Thread.sleep(delay * 1000);
 								printVectorTable(vectorTable);
+								for(int i = 1; i < 5; i ++){
+									if (myId != i){
+										vectorTable[myId][i] = calculatePath(myId, i);
+									}
+								}
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
