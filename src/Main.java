@@ -336,9 +336,9 @@ public class Main {
 		}
 	}
 
-	public static void calculatePath(int from, int to) {
+	public static int calculatePath(int from, int to) {
 		// path finding
-		if (vectorTable.length < 1) { return; }
+//		if (vectorTable.length < 1) { return 0; }
 		boolean visited[] = new boolean[vectorTable[0].length];
 		int at = from;
 		visited[0] = true;
@@ -380,6 +380,7 @@ public class Main {
 			System.out.println(id);
 		}
 		System.out.println("Distance: " + distanceToHere);
+		return distanceToHere;
 	}
 	
 	public static void sendMessage(String message, String ip, int port) throws Exception {
