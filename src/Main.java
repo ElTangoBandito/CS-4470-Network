@@ -21,6 +21,7 @@ public class Main {
 	private static int[][] tempTable = new int[5][5];
 
 	public static void main(String[] args) throws IOException{
+		initializeVectorTable();
 		PORTNUMBER = getPort();
 		System.out.println("Messenger online.");
 		Server serverThread = new Server(PORTNUMBER);
