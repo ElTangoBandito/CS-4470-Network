@@ -99,11 +99,13 @@ public class Main {
 								System.out.println(vectorTable[1][3]);
 								System.out.println(vectorTable[1][4]);
 								*/
-								printVectorTable(vectorTable);
-								receiver.run();
+								receiver.start();
 							}
 						}
-						//server -t <topology-file-name> -i <routing-update-interval>
+//						printVectorTable(vectorTable);
+//						System.out.println("Server command completed");
+
+						// server -t <topology-file-name> -i <routing-update-interval>
 						// server -t topology.txt -i 100
 					}
 					else if(userInput[0].equals("update")){
@@ -141,7 +143,6 @@ public class Main {
 	private static final int INF = -1;
 	private static final int MIN_LENGTH = 3;
 	
-	
 	public static void display(){
 		display(vectorTable,myId);
 	}
@@ -149,8 +150,6 @@ public class Main {
 	public static void display(int [][]array, int myId){
 		if(array.length < 1)
 			return;
-		
-		
 		//Default row name is to i
 		String [] rowName = new String[array.length];
 		//colunm name is to j
