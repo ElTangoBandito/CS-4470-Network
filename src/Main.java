@@ -798,9 +798,9 @@ class UDPReceiver extends Thread {
 	            if (distances[0].equals("disable")) {
 	            	int sender = Integer.valueOf(distances[1]);
 	            	int cutOf  = Integer.valueOf(distances[2]);
-	            	resetAll(vectorTable);
+	            	resetAll();
 	            	if(myId == cutOf){
-	            		originVector[cutOf] = 100;
+	            		originVector[sender] = 100;
 	            	}
 	            	for(int i = 1; i < 5; i ++){
 	            		vectorTable[myId][i] = originVector[i];
@@ -841,7 +841,7 @@ class UDPReceiver extends Thread {
 		return packetCounter;
 	}
 	
-	public void resetAll(int[][] vectorTable){
+	public void resetAll(){
 		for(int[] row: vectorTable){
 			for(int i = 1; i < 5; i++){
 				row[i] = 100;
