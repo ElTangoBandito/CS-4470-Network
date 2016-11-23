@@ -572,15 +572,24 @@ public class Main {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j ++) {
 				if(tempTable[i][j] != vectorTable[i][j]){
+					copyTable();
 					return false;
 				}
 			}
 		}
-		tempTable = vectorTable;
+		
+		copyTable();
 		return true;
 	}
+	
+	public static void copyTable(){
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j ++) {
+				tempTable[i][j] = vectorTable[i][j];
+			}
+		}
+	}
 }
-
 
 class Peer extends Object {
 	private static int connectedByCounter = 1;
