@@ -135,6 +135,7 @@ public class Main {
 								}
 								System.out.println("Step intiated");
 								Thread.sleep(delay * 1000);
+								printVectorTable(vectorTable);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
