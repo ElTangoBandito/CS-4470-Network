@@ -575,9 +575,8 @@ public class Main {
 				} else {
 					System.out.print(distance + " ");
 				}
-				
 			}
-			System.out.println();
+			System.out.println("==========");
 		}
 	}
 	public static boolean compareTables() {
@@ -736,15 +735,15 @@ class UDPReceiver extends Thread {
 				
 	            String sentence = new String(receivePacket.getData());
 	            
-	            System.out.println("RECEIVED: " + sentence);
+//	            System.out.println("RECEIVED: " + sentence);
 	            String[] distances = sentence.split(" ");
 
 				int sender = Integer.valueOf(distances[0]);
 				for (int i = 1; i < 5; i++) {
 					vectorTable[sender][i] = Integer.valueOf(distances[i]);
 				}
-	            printVectorTable();
-	            
+				System.out.println("Vector Revceived from: " + sender);
+//	            printVectorTable();
 	            // increment packet counter
 	            packetCounter++;
 	            
@@ -758,9 +757,13 @@ class UDPReceiver extends Thread {
 		System.out.println("Vector Table:");
 		for (int[] arr: vectorTable) {
 			for (int distance: arr) {
-				System.out.print(distance + " ");
+				if (distance == 100) {
+					System.out.print("X ");
+				} else {
+					System.out.print(distance + " ");
+				}
 			}
-			System.out.println();
+			System.out.println("==========");
 		}
 	}
 	
