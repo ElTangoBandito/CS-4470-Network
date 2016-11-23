@@ -18,6 +18,7 @@ public class Main {
 
 	private static Map<Integer, List<String>> connectionsMap = new HashMap<Integer, List<String>>();
 	private static int[][] vectorTable = new int[5][5];
+	private static int[][] tempTable = new int[5][5];
 
 	public static void main(String[] args) throws IOException{
 		PORTNUMBER = getPort();
@@ -70,11 +71,6 @@ public class Main {
 							send(Integer.parseInt(userInput[1]), message);
 						}
 					}
-					else if(userInput[0].equals("step")){ 
-						if (checkInt(userInput[1])){
-							send(Integer.parseInt(userInput[1]), initializeNeighborTable());
-						}
-					}
 					else if (userInput[0].equals("packet")) {
 						System.out.println(receiver.getPacketCounter());
 					}
@@ -106,7 +102,7 @@ public class Main {
 //						System.out.println("Server command completed");
 
 						// server -t <topology-file-name> -i <routing-update-interval>
-						// server -t topology.txt -i 100
+						// server -t topology.txt -i 5
 					}
 					else if(userInput[0].equals("update")){
 						updateVector(userInput);
@@ -128,6 +124,19 @@ public class Main {
 								System.out.println(port);
 								System.out.println(message);
 								*/
+							}
+						}
+					}
+					else if(userInput[0].equals("step")){
+						while(true){
+							try {
+								if(compareTables()){
+									break;
+								}
+								System.out.println("Step intiated");
+								Thread.sleep(delay * 1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
 							}
 						}
 					}
@@ -558,6 +567,17 @@ public class Main {
 			}
 			System.out.println();
 		}
+	}
+	public static boolean compareTables() {
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j ++) {
+				if(tempTable[i][j] != vectorTable[i][j]){
+					return false;
+				}
+			}
+		}
+		tempTable = vectorTable;
+		return true;
 	}
 }
 
