@@ -200,7 +200,11 @@ public class Main {
 	}
 	
 	public static void resetAll(){
-		initializeVectorTable();
+		for(int[] row: vectorTable){
+			for(int i = 1; i < 5; i++){
+				row[i] = 100;
+			}
+		}
 	}
 	
 	private static void rep(String str, int times) {
@@ -795,7 +799,9 @@ class UDPReceiver extends Thread {
 	            	int sender = Integer.valueOf(distances[1]);
 	            	int cutOf  = Integer.valueOf(distances[2]);
 	            	resetAll(vectorTable);
-	            	vectorTable[sender][cutOf] = 100;
+	            	if(myId == cutOf){
+	            		originVector[cutOf] = 100;
+	            	}
 	            	for(int i = 1; i < 5; i ++){
 	            		vectorTable[myId][i] = originVector[i];
 	            	}
@@ -836,11 +842,10 @@ class UDPReceiver extends Thread {
 	}
 	
 	public void resetAll(int[][] vectorTable){
-		initializeVectorTable(vectorTable);
-	}
-	public void initializeVectorTable(int[][] vectorTable){
 		for(int[] row: vectorTable){
-			Arrays.fill(row, 100);
+			for(int i = 1; i < 5; i++){
+				row[i] = 100;
+			}
 		}
 	}
 	
