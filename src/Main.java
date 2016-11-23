@@ -20,6 +20,7 @@ public class Main {
 	private static Map<Integer, List<String>> connectionsMap = new HashMap<Integer, List<String>>();
 	private static int[][] vectorTable = new int[5][5];
 	private static int[][] tempTable = new int[5][5];
+	private static int[] originVector = new int[5];
 
 	public static void main(String[] args) throws IOException{
 		initializeVectorTable();
@@ -97,6 +98,8 @@ public class Main {
 								System.out.println(vectorTable[1][3]);
 								System.out.println(vectorTable[1][4]);
 								*/
+								receiver.setMyId(myId);
+								receiver.setOriginVector(originVector);
 								receiver.start();
 							}
 						}
@@ -133,6 +136,30 @@ public class Main {
 						}
 						printPaths();
 					}
+					else if(userInput[0].equals("disable")){
+						if(userInput.length == 2){
+							int index = Integer.parseInt(userInput[1]);
+							if(index > 0 && index < 5){
+								if (index != myId && originVector[index] != 100){
+									for (int i = 1; i < 5; i++){
+										if (i != myId){
+											List<String> ipAndPort = connectionsMap.get(i);
+											String ip = ipAndPort.get(0);
+											int port = Integer.parseInt(ipAndPort.get(1));
+											String message = "disable";
+											resetAll();
+											receiver.resetAll(vectorTable, originVector);
+											try {
+												sendMessage(message, ip, port);
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 					else{
 						System.out.println("Invalid command or parameters, type in 'help' for details");
 					}
@@ -166,6 +193,14 @@ public class Main {
 		display(rowName,columnName,array,myId);
 	}
 	
+	public static void saveOrigin(){
+		originVector = vectorTable[myId];
+	}
+	
+	public static void resetAll(){
+		initializeVectorTable();
+		vectorTable[myId] = originVector;
+	}
 	
 	private static void rep(String str, int times) {
 		for (int i = 0; i < times; i++) {
@@ -387,6 +422,7 @@ public class Main {
 			path.add(at);
 			at = pathRecord.get(at);
 		}
+		path.add(from);
 		Collections.reverse(path);
 		paths.set(to, path);
 		return distanceToHere;
@@ -591,6 +627,7 @@ public class Main {
 					System.out.print(distance + " ");
 				}
 			}
+			System.out.println();
 		}
 		System.out.println("\n==========");
 	}
@@ -733,6 +770,8 @@ class UDPReceiver extends Thread {
 	private int [][] vectorTable;
 	private DatagramSocket serverSocket;
 	private int packetCounter;
+	private int[] originVector;
+	private int myId;
 	
 	public UDPReceiver(int[][] vectorTable, int port, int delay) throws SocketException {
 		this.vectorTable = vectorTable;
@@ -749,18 +788,20 @@ class UDPReceiver extends Thread {
 				serverSocket.receive(receivePacket);
 				
 	            String sentence = new String(receivePacket.getData());
-	            
-//	            System.out.println("RECEIVED: " + sentence);
-	            String[] distances = sentence.split(" ");
+	            if (sentence.equals("disable")) {
+	            	resetAll(vectorTable, originVector);
+	            }
+	            else {
+		            String[] distances = sentence.split(" ");
 
-				int sender = Integer.valueOf(distances[0]);
-				for (int i = 1; i < 5; i++) {
-					vectorTable[sender][i] = Integer.valueOf(distances[i]);
-				}
-				System.out.println("Vector Revceived from: " + sender);
-//	            printVectorTable();
-	            // increment packet counter
-	            packetCounter++;
+					int sender = Integer.valueOf(distances[0]);
+					for (int i = 1; i < 5; i++) {
+						vectorTable[sender][i] = Integer.valueOf(distances[i]);
+					}
+					System.out.println("Vector Revceived from: " + sender);
+		            // increment packet counter
+		            packetCounter++;
+	            }
 	            
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -778,11 +819,30 @@ class UDPReceiver extends Thread {
 					System.out.print(distance + " ");
 				}
 			}
+			System.out.println();
 		}
 		System.out.println("\n==========");
 	}
 	
 	public int getPacketCounter() {
 		return packetCounter;
+	}
+	
+	public void resetAll(int[][] vectorTable, int[] originVector){
+		initializeVectorTable(vectorTable);
+		vectorTable[myId] = originVector;
+	}
+	public void initializeVectorTable(int[][] vectorTable){
+		for(int[] row: vectorTable){
+			Arrays.fill(row, 100);
+		}
+	}
+	
+	public void setOriginVector(int[] vectorIn){
+		this.originVector = vectorIn;
+	}
+	
+	public void setMyId(int myId){
+		this.myId = myId;
 	}
 }
