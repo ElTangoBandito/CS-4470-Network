@@ -145,6 +145,11 @@ public class Main {
 							if(index > 0 && index < 5){
 								if (index != myId && originVector[index] != 100){
 									resetAll();
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e1) {
+										e1.printStackTrace();
+									}
 									originVector[index] = 100;
 									for(int j = 0; j < 5; j++){
 										vectorTable[myId][j] = originVector[j];
@@ -799,6 +804,11 @@ class UDPReceiver extends Thread {
 	            	int sender = Integer.valueOf(distances[1]);
 	            	int cutOf  = Integer.valueOf(distances[2]);
 	            	resetAll();
+	            	try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
 	            	if(myId == cutOf){
 	            		originVector[sender] = 100;
 	            	}
