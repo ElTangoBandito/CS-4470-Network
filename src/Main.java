@@ -15,6 +15,7 @@ public class Main {
 	private static int delay;
 	private static int numberOfServers;
 	private static int numerOfEdges;
+	private static ArrayList<ArrayList<Integer> > paths = new ArrayList<>();
 
 	private static Map<Integer, List<String>> connectionsMap = new HashMap<Integer, List<String>>();
 	private static int[][] vectorTable = new int[5][5];
@@ -130,6 +131,7 @@ public class Main {
 								e.printStackTrace();
 							}
 						}
+						printPaths();
 					}
 					else{
 						System.out.println("Invalid command or parameters, type in 'help' for details");
@@ -375,17 +377,26 @@ public class Main {
 			visited[at] = true;
 		}
 		// show path
-//		List<Integer> path = new ArrayList<>();
-//		while (at != from) {
-//			path.add(at);
-//			at = pathRecord.get(at);
-//		}
-//		Collections.reverse(path);
-//		for (int id: path) {
-//			System.out.println(id);
-//		}
-//		System.out.println("Distance: " + distanceToHere);
+		ArrayList<Integer> path = new ArrayList<>();
+		while (at != from) {
+			path.add(at);
+			at = pathRecord.get(at);
+		}
+		Collections.reverse(path);
+		paths.set(to, path);
 		return distanceToHere;
+	}
+	
+	public static void printPaths() {
+		for (int i = 0; i < 5; i++) {
+			ArrayList<Integer> path = paths.get(i);
+			if (!path.isEmpty()) {
+				System.out.println("Path to " + i);
+				for (Integer node: path) {
+					System.out.println(node + " ");
+				}
+			}
+		}
 	}
 	
 	public static void sendMessage(String message, String ip, int port) throws Exception {
