@@ -338,7 +338,7 @@ public class Main {
 	//Initialize 2D array
 	public static void initializeVectorTable(){
 		for(int[] row: vectorTable){
-			Arrays.fill(row, Integer.MAX_VALUE);
+			Arrays.fill(row, 100);
 		}
 	}
 
@@ -376,16 +376,16 @@ public class Main {
 			visited[at] = true;
 		}
 		// show path
-		List<Integer> path = new ArrayList<>();
-		while (at != from) {
-			path.add(at);
-			at = pathRecord.get(at);
-		}
-		Collections.reverse(path);
-		for (int id: path) {
-			System.out.println(id);
-		}
-		System.out.println("Distance: " + distanceToHere);
+//		List<Integer> path = new ArrayList<>();
+//		while (at != from) {
+//			path.add(at);
+//			at = pathRecord.get(at);
+//		}
+//		Collections.reverse(path);
+//		for (int id: path) {
+//			System.out.println(id);
+//		}
+//		System.out.println("Distance: " + distanceToHere);
 		return distanceToHere;
 	}
 	
@@ -571,7 +571,12 @@ public class Main {
 		System.out.println("Vector Table:");
 		for (int[] arr: vectorTable) {
 			for (int distance: arr) {
-				System.out.print(distance + " ");
+				if (distance == 100) {
+					System.out.print("X ");
+				} else {
+					System.out.print(distance + " ");
+				}
+				
 			}
 			System.out.println();
 		}
