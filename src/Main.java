@@ -327,14 +327,6 @@ public class Main {
 	}
 
 	public static void calculatePath(int from, int to) {
-		// just for testing 
-		vectorTable = new int[][] {
-			{0, 0, 0, 0, 0},
-			{0, 0, 7, 4, 5},
-			{0, 7, 0, 2, -1},
-			{0, 4, 2, 0, 1},
-			{0, 5, -1, 1, 0}
-		};
 		// path finding
 		if (vectorTable.length < 1) { return; }
 		boolean visited[] = new boolean[vectorTable[0].length];
