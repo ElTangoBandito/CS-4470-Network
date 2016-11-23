@@ -152,7 +152,6 @@ public class Main {
 											String message = "disable " + String.valueOf(myId) + " " + String.valueOf(index) + " ";
 											originVector[index] = 100;
 											resetAll();
-											receiver.resetAll(vectorTable, originVector);
 											try {
 												sendMessage(message, ip, port);
 											} catch (Exception e) {
@@ -792,10 +791,10 @@ class UDPReceiver extends Thread {
 	            if (distances[0].equals("disable")) {
 	            	int sender = Integer.valueOf(distances[1]);
 	            	int cutOf  = Integer.valueOf(distances[2]);
-	            	resetAll(vectorTable, originVector);
+	            	resetAll(vectorTable);
 	            	vectorTable[sender][cutOf] = 100;
 	            	for(int i = 1; i < 5; i ++){
-	            		originVector[i] = vectorTable[myId][i];
+	            		vectorTable[myId][i] = originVector[i];
 	            	}
 	            }
 	            else {
@@ -833,7 +832,7 @@ class UDPReceiver extends Thread {
 		return packetCounter;
 	}
 	
-	public void resetAll(int[][] vectorTable, int[] originVector){
+	public void resetAll(int[][] vectorTable){
 		initializeVectorTable(vectorTable);
 	}
 	public void initializeVectorTable(int[][] vectorTable){
