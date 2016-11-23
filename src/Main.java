@@ -25,6 +25,9 @@ public class Main {
 		Server serverThread = new Server(PORTNUMBER);
 		serverThread.start();
 		
+		// UDP receiver
+		UDPReceiver receiver = new UDPReceiver(vectorTable, PORTNUMBER, delay);
+
 		terminated = false;
 		while(!terminated){
 			if (baseScanner.hasNext()){
@@ -72,7 +75,9 @@ public class Main {
 							send(Integer.parseInt(userInput[1]), initializeNeighborTable());
 						}
 					}
-						
+					else if (userInput[0].equals("packet")) {
+						System.out.println(receiver.getPacketCounter());
+					}
 						
 						
 						
@@ -95,12 +100,7 @@ public class Main {
 								System.out.println(vectorTable[1][4]);
 								*/
 								printVectorTable(vectorTable);
-								try {
-									UDPReceiver receiver = new UDPReceiver(vectorTable, PORTNUMBER, delay);
-									receiver.run();
-								} catch (Exception e1) {
-									e1.printStackTrace();
-								}
+								receiver.run();
 							}
 						}
 						//server -t <topology-file-name> -i <routing-update-interval>
