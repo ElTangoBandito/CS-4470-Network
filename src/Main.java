@@ -144,14 +144,17 @@ public class Main {
 							int index = Integer.parseInt(userInput[1]);
 							if(index > 0 && index < 5){
 								if (index != myId && originVector[index] != 100){
+									resetAll();
+									originVector[index] = 100;
+									for(int j = 0; j < 5; j++){
+										vectorTable[myId][j] = originVector[j];
+									}
 									for (int i = 1; i < 5; i++){
 										if (i != myId){
 											List<String> ipAndPort = connectionsMap.get(i);
 											String ip = ipAndPort.get(0);
 											int port = Integer.parseInt(ipAndPort.get(1));
 											String message = "disable " + String.valueOf(myId) + " " + String.valueOf(index) + " ";
-											originVector[index] = 100;
-											resetAll();
 											try {
 												sendMessage(message, ip, port);
 											} catch (Exception e) {
