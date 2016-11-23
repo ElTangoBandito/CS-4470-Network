@@ -15,6 +15,7 @@ public class Main {
 	private static int delay;
 	private static int numberOfServers;
 	private static int numerOfEdges;
+
 	private static Map<Integer, List<String>> connectionsMap = new HashMap<Integer, List<String>>();
 	private static int[][] vectorTable = new int[5][5];
 
@@ -23,9 +24,7 @@ public class Main {
 		System.out.println("Messenger online.");
 		Server serverThread = new Server(PORTNUMBER);
 		serverThread.start();
-
 		
-
 		terminated = false;
 		while(!terminated){
 			if (baseScanner.hasNext()){
@@ -687,12 +686,12 @@ class Client extends Thread {
 class UDPReceiver extends Thread {
 	private int [][] vectorTable;
 	private DatagramSocket serverSocket;
-	private int port;
+	private int packetCounter;
 	
 	public UDPReceiver(int[][] vectorTable, int port, int delay) throws SocketException {
 		this.vectorTable = vectorTable;
-		this.port = port;
 		serverSocket = new DatagramSocket(port);
+		packetCounter = 0;
 	}
 	
 	public void run() {
@@ -713,6 +712,10 @@ class UDPReceiver extends Thread {
 					vectorTable[sender][i] = Integer.valueOf(distances[i]);
 				}
 	            printVectorTable();
+	            
+	            // increment packet counter
+	            packetCounter++;
+	            
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -727,5 +730,9 @@ class UDPReceiver extends Thread {
 			}
 			System.out.println();
 		}
+	}
+	
+	public int getPacketCounter() {
+		return packetCounter;
 	}
 }
