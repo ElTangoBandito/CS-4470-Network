@@ -395,6 +395,11 @@ public class Main {
 	public static void printPaths() {
 		for (int i = 0; i < 5; i++) {
 			ArrayList<Integer> path = paths.get(i);
+			System.out.println("Path to " + i + ":");
+			for (Integer node: path) {
+				System.out.print(node + " ");
+			}
+			System.out.println();
 		}
 	}
 	
@@ -586,8 +591,8 @@ public class Main {
 					System.out.print(distance + " ");
 				}
 			}
-			System.out.println("\n==========");
 		}
+		System.out.println("\n==========");
 	}
 	public static boolean compareTables() {
 		for (int i = 0; i < 5; i++) {
@@ -773,8 +778,8 @@ class UDPReceiver extends Thread {
 					System.out.print(distance + " ");
 				}
 			}
-			System.out.println("\n==========");
 		}
+		System.out.println("\n==========");
 	}
 	
 	public int getPacketCounter() {
