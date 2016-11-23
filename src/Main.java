@@ -98,7 +98,9 @@ public class Main {
 								System.out.println(vectorTable[1][3]);
 								System.out.println(vectorTable[1][4]);
 								*/
-								originVector = vectorTable[myId];
+								for(int i = 1; i < 5; i++){
+									originVector[i] = vectorTable[myId][i];
+								}
 								receiver.setMyId(myId);
 								receiver.setOriginVector(originVector);
 								receiver.start();
@@ -147,7 +149,8 @@ public class Main {
 											List<String> ipAndPort = connectionsMap.get(i);
 											String ip = ipAndPort.get(0);
 											int port = Integer.parseInt(ipAndPort.get(1));
-											String message = "disable";
+											String message = "disable " + String.valueOf(myId) + " " + String.valueOf(index) + " ";
+											originVector[index] = 100;
 											resetAll();
 											receiver.resetAll(vectorTable, originVector);
 											try {
@@ -196,7 +199,6 @@ public class Main {
 	
 	public static void resetAll(){
 		initializeVectorTable();
-		vectorTable[myId] = originVector;
 	}
 	
 	private static void rep(String str, int times) {
@@ -785,13 +787,18 @@ class UDPReceiver extends Thread {
 				serverSocket.receive(receivePacket);
 				
 	            String sentence = new String(receivePacket.getData());
-	            if (sentence.equals("disable")) {
-	            	System.out.println("HEYOOOOOOOO");
+	            String[] distances = sentence.split(" ");
+	            System.out.println("Sentence:" + distances[0]);
+	            if (distances[0].equals("disable")) {
+	            	int sender = Integer.valueOf(distances[1]);
+	            	int cutOf  = Integer.valueOf(distances[2]);
 	            	resetAll(vectorTable, originVector);
+	            	vectorTable[sender][cutOf] = 100;
+	            	for(int i = 1; i < 5; i ++){
+	            		originVector[i] = vectorTable[myId][i];
+	            	}
 	            }
 	            else {
-		            String[] distances = sentence.split(" ");
-
 					int sender = Integer.valueOf(distances[0]);
 					for (int i = 1; i < 5; i++) {
 						vectorTable[sender][i] = Integer.valueOf(distances[i]);
@@ -828,7 +835,6 @@ class UDPReceiver extends Thread {
 	
 	public void resetAll(int[][] vectorTable, int[] originVector){
 		initializeVectorTable(vectorTable);
-		vectorTable[myId] = originVector;
 	}
 	public void initializeVectorTable(int[][] vectorTable){
 		for(int[] row: vectorTable){
