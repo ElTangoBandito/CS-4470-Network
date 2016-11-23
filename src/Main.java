@@ -109,24 +109,7 @@ public class Main {
 						updateVector(userInput);
 					}
 					else if(userInput[0].equals("beginR")){
-						for (int i = 1; i < 5; i++){
-							if (i != myId){
-								List<String> ipAndPort = connectionsMap.get(i);
-								String ip = ipAndPort.get(0);
-								int port = Integer.parseInt(ipAndPort.get(1));
-								String message = initializeNeighborTable();
-								try {
-									sendMessage(message, ip, port);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								/*
-								System.out.println(ip);
-								System.out.println(port);
-								System.out.println(message);
-								*/
-							}
-						}
+						sendAll();
 					}
 					else if(userInput[0].equals("step")){
 						while(true){
@@ -137,6 +120,7 @@ public class Main {
 								System.out.println("Step intiated");
 								Thread.sleep(delay * 1000);
 								printVectorTable(vectorTable);
+								sendAll();
 								for(int i = 1; i < 5; i ++){
 									if (myId != i){
 										vectorTable[myId][i] = calculatePath(myId, i);
@@ -225,6 +209,21 @@ public class Main {
 		return max;
 	}
 
+	public static void sendAll(){
+		for (int i = 1; i < 5; i++){
+			if (i != myId){
+				List<String> ipAndPort = connectionsMap.get(i);
+				String ip = ipAndPort.get(0);
+				int port = Integer.parseInt(ipAndPort.get(1));
+				String message = initializeNeighborTable();
+				try {
+					sendMessage(message, ip, port);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	public static void display(String[] rowName, String[] columnName, int[][] array, int myId) {
 	
