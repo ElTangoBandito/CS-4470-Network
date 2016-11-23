@@ -98,6 +98,7 @@ public class Main {
 								System.out.println(vectorTable[1][3]);
 								System.out.println(vectorTable[1][4]);
 								*/
+								originVector = vectorTable[myId];
 								receiver.setMyId(myId);
 								receiver.setOriginVector(originVector);
 								receiver.start();
@@ -191,10 +192,6 @@ public class Main {
 		}
 		
 		display(rowName,columnName,array,myId);
-	}
-	
-	public static void saveOrigin(){
-		originVector = vectorTable[myId];
 	}
 	
 	public static void resetAll(){
@@ -789,6 +786,7 @@ class UDPReceiver extends Thread {
 				
 	            String sentence = new String(receivePacket.getData());
 	            if (sentence.equals("disable")) {
+	            	System.out.println("HEYOOOOOOOO");
 	            	resetAll(vectorTable, originVector);
 	            }
 	            else {
