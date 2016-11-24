@@ -818,6 +818,12 @@ class UDPReceiver extends Thread {
 	            	int sender = Integer.valueOf(distances[1]);
 	            	int cutOf  = Integer.valueOf(distances[2]);
 	            	resetAll();
+	            	try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 	            	if(myId == cutOf){
 	            		originVector[sender] = 100;
 	            	}
@@ -826,8 +832,15 @@ class UDPReceiver extends Thread {
 	            	}
 	            }
 	            else if (distances[0].equals("crash")) {
+	            	System.out.println(sentence);
 	            	int sender = Integer.valueOf(distances[1]);
 	            	resetAll();
+	            	try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 	            	for (int i = 0; i < 5; i++) {
 	            		if (originVector[i] == sender) {
 	            			originVector[i] = 100;
