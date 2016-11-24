@@ -841,11 +841,9 @@ class UDPReceiver extends Thread {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-	            	for (int i = 0; i < 5; i++) {
-	            		if (originVector[i] == sender) {
-	            			originVector[i] = 100;
-	            		}
-	            	}
+
+	            	originVector[sender] = 100;
+	            	
 	            	for(int i = 1; i < 5; i ++){
 	            		vectorTable[myId][i] = originVector[i];
 	            	}
