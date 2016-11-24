@@ -118,6 +118,9 @@ public class Main {
 					else if(userInput[0].equals("beginR")){
 						sendAll();
 					}
+					else if(userInput[0].equals("crash")){
+						crash();
+					}
 					else if(userInput[0].equals("step")){
 						while(true){
 							try {
@@ -145,11 +148,6 @@ public class Main {
 							if(index > 0 && index < 5){
 								if (index != myId && originVector[index] != 100){
 									resetAll();
-									try {
-										Thread.sleep(1000);
-									} catch (InterruptedException e1) {
-										e1.printStackTrace();
-									}
 									originVector[index] = 100;
 									for(int j = 0; j < 5; j++){
 										vectorTable[myId][j] = originVector[j];
@@ -263,6 +261,22 @@ public class Main {
 				String ip = ipAndPort.get(0);
 				int port = Integer.parseInt(ipAndPort.get(1));
 				String message = initializeNeighborTable();
+				try {
+					sendMessage(message, ip, port);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static void crash(){
+		for (int i = 1; i < 5; i++){
+			if (i != myId){
+				List<String> ipAndPort = connectionsMap.get(i);
+				String ip = ipAndPort.get(0);
+				int port = Integer.parseInt(ipAndPort.get(1));
+				String message = "crash " + myId + " ";
 				try {
 					sendMessage(message, ip, port);
 				} catch (Exception e) {
@@ -804,13 +818,20 @@ class UDPReceiver extends Thread {
 	            	int sender = Integer.valueOf(distances[1]);
 	            	int cutOf  = Integer.valueOf(distances[2]);
 	            	resetAll();
-	            	try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
 	            	if(myId == cutOf){
 	            		originVector[sender] = 100;
+	            	}
+	            	for(int i = 1; i < 5; i ++){
+	            		vectorTable[myId][i] = originVector[i];
+	            	}
+	            }
+	            else if (distances[0].equals("crash")) {
+	            	int sender = Integer.valueOf(distances[1]);
+	            	resetAll();
+	            	for (int i = 0; i < 5; i++) {
+	            		if (originVector[i] == sender) {
+	            			originVector[i] = 100;
+	            		}
 	            	}
 	            	for(int i = 1; i < 5; i ++){
 	            		vectorTable[myId][i] = originVector[i];
