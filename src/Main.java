@@ -3,6 +3,8 @@ import java.net.*;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 
 public class Main {
 	private static int PORTNUMBER;
@@ -21,6 +23,7 @@ public class Main {
 	private static int[][] vectorTable = new int[5][5];
 	private static int[][] tempTable = new int[5][5];
 	private static int[] originVector = new int[5];
+	private static boolean[] calculated = new boolean[5];
 
 	public static void main(String[] args) throws IOException{
 		initializeVectorTable();
@@ -404,6 +407,7 @@ public class Main {
 		// TODO: move this to somewhere else
 		for (int i = 0; i < 5; i++) {
 			paths.add(new ArrayList<>());
+			calculated[i] = false;
 		}
 	}
 
@@ -448,7 +452,10 @@ public class Main {
 		}
 		path.add(from);
 		Collections.reverse(path);
-		paths.set(to, path);
+		if (!calculated[to]) {
+			paths.set(to, path);
+			calculated[to] = true;
+		}
 		return distanceToHere;
 	}
 	
